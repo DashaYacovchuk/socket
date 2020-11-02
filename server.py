@@ -13,20 +13,13 @@ out_ = list()
 def get_non_blocking_server_socket():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.setblocking(0)
-
-    # Биндим сервер на нужный адрес и порт
     server.bind(SERVER_ADDRESS)
-
-    # Установка максимального количество подключений
     server.listen(MAX_CONNECTIONS)
 
     return server
 
 
 def readables(read, server):
-    """
-    Обработка появления событий на входах
-    """
     for resource in read:
         if resource is server:
             connection, client_address = resource.accept()

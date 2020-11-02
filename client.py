@@ -1,6 +1,6 @@
 import socket
 
-MAX_CONNECTIONS = 20
+MAX_CONNECTIONS = 15
 address_to_server = ('localhost', 8686)
 
 clients = [socket.socket(socket.AF_INET, socket.SOCK_STREAM) for i in range(MAX_CONNECTIONS)]
