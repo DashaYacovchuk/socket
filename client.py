@@ -1,7 +1,15 @@
 import socket
 
-HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
-PORT = 8086       # Port to listen on (non-privileged ports are > 1023)
+MAX_CONNECTIONS = 20
+address_to_server = ('localhost', 8686)
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-sock.sendto(b'Hi server',(HOST,PORT))
+clients = [socket.socket(socket.AF_INET, socket.SOCK_STREAM) for i in range(MAX_CONNECTIONS)]
+for client in clients:
+    client.connect(address_to_server)
+for i in range(MAX_CONNECTIONS):
+    clients[i].send(bytes("10 73 52 31 82" + str(i), encoding='UTF-8'))
+
+for client in clients:
+    data = client.recv(1024)
+    result = data.decode('utf-8')
+    print(result)
