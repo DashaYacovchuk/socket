@@ -2,8 +2,7 @@ import select
 import socket
 
 SERVER_ADDRESS = ('localhost', 8686)
-global res
-res = '0'
+
 MAX_CONNECTIONS = 15
 numbers_server = {1,2,3}
 in_ = list()
@@ -15,7 +14,6 @@ def get_non_blocking_server_socket():
     server.setblocking(0)
     server.bind(SERVER_ADDRESS)
     server.listen(MAX_CONNECTIONS)
-
     return server
 
 
@@ -32,20 +30,20 @@ def readables(read, server):
                 global res
                 data = resource.recv(1024)
                 data = data.decode('utf-8')
+            except ConnectionResetError:
+                pass
+            if data:
                 set1 = set(data.split())
                 for i in list(set1):
                     if i == " ":
                         set1.discard(i)
                 set2 = set(map(int, set1))
                 for i in list(set2):
-                    if i > 10:
+                    if i > 55:
                         set2.discard(i)
                 fin = set2.union(numbers_server)
+                fin = sorted(fin)
                 res = str(fin)
-            except ConnectionResetError:
-                pass
-
-            if data:
                 if resource not in out_:
                     out_.append(resource)
             else:
@@ -66,7 +64,6 @@ def writables(write):
         try:
             global res
             resource.send(str(res).encode())
-            res = 0
         except OSError:
             clear(resource)
 
