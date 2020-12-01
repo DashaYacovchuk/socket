@@ -2,8 +2,8 @@ import select
 import socket
 
 SERVER_ADDRESS = ('localhost', 8686)
-
-MAX_CONNECTIONS = 15
+res = list()
+MAX_CONNECTIONS = 10
 numbers_server = {1,2,3}
 in_ = list()
 out_ = list()
@@ -43,7 +43,8 @@ def readables(read, server):
                         set2.discard(i)
                 fin = set2.union(numbers_server)
                 fin = sorted(fin)
-                res = str(fin)
+
+                resource.send(str(fin).encode())
                 if resource not in out_:
                     out_.append(resource)
             else:
@@ -76,7 +77,7 @@ if __name__ == '__main__':
         while in_:
             read, write, exceptional = select.select(in_, out_, in_)
             readables(read, server_socket)
-            writables(write)
+            #writables(write)
     except KeyboardInterrupt:
         clear(server_socket)
         print("Server stopped! Thank you for using!")
